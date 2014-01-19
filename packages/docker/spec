@@ -1,0 +1,5 @@
+---
+name: docker
+
+files:
+  - docker/empty.txt

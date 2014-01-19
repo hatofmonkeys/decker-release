@@ -1,0 +1,38 @@
+#!/bin/bash -e
+
+USER=vcap
+
+case $1 in
+
+  start)
+
+    #if not present, install it
+    if [ ! -f /etc/init.d/docker ]; then
+      apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
+
+      echo 'deb http://get.docker.io/ubuntu docker main' > /etc/apt/sources.list.d/docker.list
+
+      apt-get update -q
+
+      apt-get install -q -y lxc-docker
+
+      usermod -a -G docker "$USER"
+    fi
+
+    #start docker
+
+    service docker start || echo "Idempotent starting would be nice"
+
+    ;;
+
+  stop)
+    /usr/sbin/service docker stop
+
+    ;;
+
+  *)
+    echo "Usage: chef-server_ctl {start|stop}"
+
+    ;;
+
+esac

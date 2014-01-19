@@ -1,0 +1,6 @@
+---
+name: decker
+templates:
+  bin/docker_ctl: bin/docker_ctl
+packages:
+  - docker

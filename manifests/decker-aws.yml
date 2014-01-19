@@ -1,0 +1,75 @@
+---
+name: decker
+director_uuid: f28109b2-1dac-4899-8113-82e3dd26b57f
+
+releases:
+- name: decker
+  version: latest
+
+compilation:
+  workers: 2
+  network: infrastructure
+  reuse_compilation_vms: true
+  cloud_properties:
+    instance_type: m1.medium
+
+update:
+  canaries: 1
+  canary_watch_time: 30000-180000
+  update_watch_time: 30000-180000
+  max_in_flight: 4
+
+networks:
+- name: infrastructure
+  type: manual
+  subnets:
+  - range: 10.10.16.0/20
+    name: default_unused
+    reserved:
+    - 10.10.16.2 - 10.10.16.255
+    - 10.10.17.1 - 10.10.17.9
+    - 10.10.17.255 - 10.10.17.255
+    static:
+    - 10.10.17.10 - 10.10.17.254
+    gateway: 10.10.16.1
+    dns:
+    - 10.10.0.2  # amazon has only 1 DNS server for the whole VPC at x.x.0.2
+    cloud_properties:
+      security_groups:
+      - cf
+      subnet: subnet-e20176ca
+- name: vip_network
+  type: vip
+  # Fake network properties to satisfy bosh diff
+  subnets:
+  - range: 127.0.99.0/24
+    gateway: 127.0.99.1
+    dns:
+    - 127.0.99.250
+  cloud_properties:
+    security_groups:
+    - bosh
+
+resource_pools:
+- name: services-small
+  network: infrastructure
+  size: 1
+  stemcell:
+    name: bosh-aws-xen-ubuntu
+    version: 71
+  cloud_properties:
+    instance_type: m1.small
+
+jobs:
+  - name: decker
+    release: decker
+    template:
+      - decker
+    instances: 1
+    resource_pool: services-small
+    networks:
+    - name: infrastructure
+      static_ips:
+      - 10.10.17.82
+properties:
+  {}
