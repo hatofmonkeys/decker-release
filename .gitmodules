@@ -1,0 +1,3 @@
+[submodule "src/decker"]
+	path = src/decker
+	url = https://github.com/hatofmonkeys/decker.git
