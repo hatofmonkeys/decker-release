@@ -1,0 +1,77 @@
+---
+nats_servers:
+<% p("nats.machines").each do |ip| %>
+  - nats://<%= p("nats.user") %>:<%= p("nats.password") %>@<%= ip %>:<%= p("nats.port") %>
+<% end %>
+
+dea_ruby: /usr/bin/ruby
+
+pid_filename: /var/vcap/sys/run/decker/decker.pid
+
+base_dir: /var/vcap/data/dea_next
+
+warden_socket: /var/vcap/data/warden/warden.sock
+
+evacuation_bail_out_time_in_seconds: <%= p("dea_next.evacuation_bail_out_time_in_seconds") %>
+default_health_check_timeout: <%= p("dea_next.default_health_check_timeout") %>
+
+directory_server:
+  protocol: '<%= p('dea_next.directory_server_protocol') %>'
+  v1_port: 12345
+  v2_port: 34567
+  file_api_port: 23456
+  streaming_timeout: <% p("dea_next.streaming_timeout") %>
+  logging:
+    file: /var/vcap/sys/log/dea_next/dir_server.log
+    <% if_p("syslog_aggregator") do %>
+    syslog: vcap.directory_server
+    <% end %>
+    level: debug
+
+domain: <%= p("domain") %>
+
+logging:
+  file: /var/vcap/sys/log/decker/decker.log
+  level: debug
+  <% if_p("syslog_aggregator.address") do %>
+  syslog: vcap.dea_next
+  <% end %>
+
+<% if_p("loggregator_endpoint.host", "loggregator_endpoint.port", "loggregator_endpoint.shared_secret") do |host, port, shared_secret| %>
+loggregator:
+  router: <%= host %>:<%= port %>
+  shared_secret: <%= shared_secret %>
+<% end %>
+
+index: <%= spec.index %>
+
+intervals:
+  heartbeat: 10
+  advertise: 5
+
+resources:
+  memory_mb: <%= p("dea_next.memory_mb") %>
+  memory_overcommit_factor: <%= p("dea_next.memory_overcommit_factor") %>
+  disk_mb: <%= p("dea_next.disk_mb") %>
+  disk_overcommit_factor: <%= p("dea_next.disk_overcommit_factor") %>
+
+bind_mounts:
+- src_path: /var/vcap/packages/buildpack_cache
+
+staging:
+  enabled: true
+  max_staging_duration: <%= p("dea_next.max_staging_duration") %>
+  memory_limit_mb: <%= p("dea_next.staging_memory_limit_mb") %>
+  disk_limit_mb: <%= p("dea_next.staging_disk_limit_mb") %>
+  cpu_limit_shares: <%= p("dea_next.staging_cpu_limit_shares") %>
+  disk_inode_limit: <%= p("dea_next.staging_disk_inode_limit") %>
+  environment:
+    BUILDPACK_CACHE: "/var/vcap/packages/buildpack_cache"
+
+instance:
+  cpu_limit_shares: <%= p("dea_next.instance_cpu_limit_shares") %>
+  disk_inode_limit: <%= p("dea_next.instance_disk_inode_limit") %>
+
+stacks: <%= p("dea_next.stacks") %>
+placement_properties:
+  zone: <%= p("dea_next.zone") %>

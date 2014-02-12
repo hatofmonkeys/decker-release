@@ -1,0 +1,20 @@
+resource_pools:
+  - name: decker_pool
+    network: cf1
+    size: 1
+    stemcell:
+        name: bosh-aws-xen-ubuntu
+        version: 71
+    cloud_properties:
+    instance_type: m1.medium
+
+jobs:
+  - name: decker
+    instances: 1
+    release: decker
+    template:
+      - decker
+    resource_pool: decker_pool
+    networks:
+      - name: cf1
+        static_ips: ~

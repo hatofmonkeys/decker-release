@@ -1,0 +1,15 @@
+set -e -x
+
+cp -a decker/* ${BOSH_INSTALL_TARGET}
+
+cd ${BOSH_INSTALL_TARGET}
+/var/vcap/packages/ruby/bin/bundle install --local --deployment --without=development test
+
+export GOROOT=$(readlink -nf /var/vcap/packages/golang)
+export PATH=$GOROOT/bin:$PATH
+
+export GOPATH=${BOSH_INSTALL_TARGET}/go
+
+cd $GOPATH
+go install runner
+
