@@ -33,8 +33,8 @@ case $1 in
 
     exec /var/vcap/packages/ruby/bin/ruby /var/vcap/packages/decker/bin/dea \
          $JOB_DIR/config/decker.yml \
-         >>$LOG_DIR/dea.stdout.log \
-         2>>$LOG_DIR/dea.stderr.log
+         >>$LOG_DIR/decker.stdout.log \
+         2>>$LOG_DIR/decker.stderr.log
 
     ;;
 
