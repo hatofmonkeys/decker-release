@@ -1,0 +1,4 @@
+set -e -x
+
+cd ${BUILD_DIR}/decker
+BUNDLE_WITHOUT=development:test bundle package --all

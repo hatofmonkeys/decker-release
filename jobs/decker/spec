@@ -2,5 +2,97 @@
 name: decker
 templates:
   bin/docker_ctl: bin/docker_ctl
+  decker.yml.erb: config/decker.yml
+  decker_ctl.erb: bin/decker_ctl
 packages:
+  - decker
   - docker
+  - common
+  - ruby
+properties:
+  domain:
+    description: "DNS domain name for this Cloud Foundry deployment"
+  nats.address:
+    description: "IP address of NATS server"
+  nats.password:
+    description: "password for NATS login"
+  nats.port:
+    description: "TCP port of NATS server"
+  nats.user:
+    description: "user name for NATS login"
+  nats.machines:
+    description: "IP of each NATS cluster member."
+  dea_next.allow_networks:
+    description:
+  dea_next.deny_networks:
+    description:
+  dea_next.disk_mb:
+    description:
+    default: 32000
+  dea_next.disk_overcommit_factor:
+    description:
+    default: 1
+  dea_next.max_staging_duration:
+    description:
+    default: 900
+  dea_next.default_health_check_timeout:
+    description: Default timeout for application to start
+    default: 60
+  dea_next.memory_mb:
+    description:
+    default: 8000
+  dea_next.memory_overcommit_factor:
+    description:
+    default: 1
+  dea_next.stacks:
+    default:
+    - "decker"
+    description:
+  dea_next.streaming_timeout:
+    description:
+    default: 60
+  dea_next.staging_memory_limit_mb:
+    description: "Memory limit in mb for staging tasks"
+    default: 1024
+  dea_next.staging_disk_limit_mb:
+    description: "Disk limit in mb for staging tasks"
+    default: 2048
+  dea_next.staging_cpu_limit_shares:
+    description: "CPU limit in shares for staging tasks cgroup"
+    default: 512
+  dea_next.instance_cpu_limit_shares:
+    description: "CPU limit in shares for running instances cgroup"
+    default: 256
+  dea_next.staging_disk_inode_limit:
+    description: Limit on inodes for a staging container
+    default: 200000
+  dea_next.instance_disk_inode_limit:
+    description: Limit on inodes for an instance container
+    default: 200000
+  dea_next.directory_server_protocol:
+    description: 'The protocol to use when communicating with the directory server ("http" or "https")'
+    default: 'https'
+  dea_next.kernel_network_tuning_enabled:
+    description: "with latest kernel version, no kernel network tunings allowed with in warden cpi containers"
+    default: true
+  dea_next.mtu:
+    description: "Interface MTU size"
+    default: 1500
+  dea_next.evacuation_bail_out_time_in_seconds:
+    description: "Duration to wait before shutting down, in seconds."
+    default: 115
+  dea_next.zone:
+    description: "The Availability Zone"
+    default: "default"
+  disk_quota_enabled:
+    description: "disk quota must be disabled to use warden-inside-warden with the warden cpi"
+    default: true
+  syslog_aggregator:
+    description: "Syslog aggregator stuff"
+  loggregator_endpoint.host:
+    description: "The host used to emit messages to the Loggregator"
+  loggregator_endpoint.port:
+    description: "The port used to emit messages to the Loggregator"
+    default: 3456
+  loggregator_endpoint.shared_secret:
+    description: "The key used to sign log messages"

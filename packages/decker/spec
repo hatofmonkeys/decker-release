@@ -1,0 +1,12 @@
+---
+name: decker
+dependencies:
+- ruby
+- golang
+files:
+- decker/Gemfile
+- decker/Gemfile.lock
+- decker/{bin,lib,vendor}/**/*
+- decker/go/{bin,src,vendor}/**/*
+- decker/buildpacks/{bin,lib}/**/*
+- decker/buildpacks/vendor/*/{bin,config,lib,resources,scripts,support,vendor}/**/*

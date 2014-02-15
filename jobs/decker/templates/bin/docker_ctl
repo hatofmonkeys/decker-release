@@ -17,9 +17,11 @@ case $1 in
       apt-get install -q -y lxc-docker
 
       usermod -a -G docker "$USER"
+
+      service docker stop
     fi
 
-    #start docker
+    echo 'DOCKER_OPTS="-g /var/vcap/data/docker"' > /etc/default/docker
 
     service docker start || echo "Idempotent starting would be nice"
 

@@ -1,0 +1,51 @@
+#!/bin/bash -e
+
+export PATH=/var/vcap/packages/ruby/bin:$PATH
+RUN_DIR=/var/vcap/sys/run/decker
+LOG_DIR=/var/vcap/sys/log/decker
+PIDFILE=$RUN_DIR/decker.pid
+JOB_DIR=/var/vcap/jobs/decker
+DATA_DIR=/var/vcap/data/decker
+export PLATFORM_CONFIG=$JOB_DIR/config/platform.yml
+
+export TMPDIR=/var/vcap/data/decker/tmp
+
+source /var/vcap/packages/common/utils.sh
+
+case $1 in
+
+  start)
+    pid_guard $PIDFILE "DECKER"
+
+    mkdir -p $RUN_DIR
+    mkdir -p $LOG_DIR
+    mkdir -p $DATA_DIR
+    mkdir -p $TMPDIR
+
+    echo $$ > $PIDFILE
+
+    # Configure the core file location
+    mkdir -p /var/vcap/sys/cores
+    chown vcap:vcap /var/vcap/sys/cores
+    echo /var/vcap/sys/cores/core-%e-%s-%p-%t > /proc/sys/kernel/core_pattern
+
+    ulimit -c unlimited
+
+    exec /var/vcap/packages/ruby/bin/ruby /var/vcap/packages/decker/bin/dea \
+         $JOB_DIR/config/decker.yml \
+         >>$LOG_DIR/decker.stdout.log \
+         2>>$LOG_DIR/decker.stderr.log
+
+    ;;
+
+  stop)
+    kill_and_wait $PIDFILE 40
+
+    ;;
+
+  *)
+    echo "Usage: decker_ctl {start|stop}"
+
+    ;;
+
+esac

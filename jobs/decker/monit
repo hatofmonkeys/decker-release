@@ -3,3 +3,9 @@ check process docker
   start program "/var/vcap/jobs/decker/bin/docker_ctl start" with timeout 180 seconds
   stop program "/var/vcap/jobs/decker/bin/docker_ctl stop"
   group vcap
+
+ check process decker
+  with pidfile /var/vcap/sys/run/decker/decker.pid
+  start program "/var/vcap/jobs/decker/bin/decker_ctl start" with timeout 180 seconds
+  stop program "/var/vcap/jobs/decker/bin/decker_ctl stop"
+  group vcap

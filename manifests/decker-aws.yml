@@ -1,6 +1,6 @@
 ---
 name: decker
-director_uuid: f28109b2-1dac-4899-8113-82e3dd26b57f
+director_uuid: 38cc5999-081f-4f6b-84db-37efe48a02b0
 
 releases:
 - name: decker
@@ -37,18 +37,7 @@ networks:
     cloud_properties:
       security_groups:
       - cf
-      subnet: subnet-e20176ca
-- name: vip_network
-  type: vip
-  # Fake network properties to satisfy bosh diff
-  subnets:
-  - range: 127.0.99.0/24
-    gateway: 127.0.99.1
-    dns:
-    - 127.0.99.250
-  cloud_properties:
-    security_groups:
-    - bosh
+      subnet: subnet-3b4a0d13
 
 resource_pools:
 - name: services-small
